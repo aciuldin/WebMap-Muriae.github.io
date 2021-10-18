@@ -1,0 +1,1971 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css"><link rel="stylesheet" href="css/L.Control.Locate.min.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/MarkerCluster.css">
+        <link rel="stylesheet" href="css/MarkerCluster.Default.css">
+        <link rel="stylesheet" href="css/leaflet-control-geocoder.Geocoder.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title> Webmap Muriaé - MG</title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script><script src="js/L.Control.Locate.min.js"></script>
+        <script src="js/leaflet-svg-shape-markers.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="js/leaflet.markercluster.js"></script>
+        <script src="data/Muriae_Florestaao_IEF_2009_Pl_0.js"></script>
+        <script src="data/Muriae_Unidade_Conservacao_Estadual_IEF_ICMBio_2021_jan_Pl_1.js"></script>
+        <script src="data/Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2.js"></script>
+        <script src="data/Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl_3.js"></script>
+        <script src="data/Muriae_Reserva_Particular_Patrimonio_Natural_IEF_ICMBio_2020_dez_Pl_4.js"></script>
+        <script src="data/Muriae_Massa_Dagua_Pl_5.js"></script>
+        <script src="data/Muriae_Ponto_Cotado_Altimetrico_P_6.js"></script>
+        <script src="data/Muriae_Reservatorio_Hidrico_Pl_7.js"></script>
+        <script src="data/Muriae_Pista_Ponto_Pouso_P_8.js"></script>
+        <script src="data/Muriae_Ponte_DER_2011_P_9.js"></script>
+        <script src="data/Muriae_Hidrografia_2011_L_10.js"></script>
+        <script src="data/Muriae_Trecho_Rodoviario_DER_2019_L_11.js"></script>
+        <script src="data/Muriae_Vila_2021_jul_P_12.js"></script>
+        <script src="data/Muriae_Microregiao_IBGE_2015_jul_Pl_13.js"></script>
+        <script src="data/Muriae_Limite_Distrital_2021_jul_L_14.js"></script>
+        <script src="data/Muriae_Limite_Municipal_2021_fev_Pl_15.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString') {
+              highlightLayer.setStyle({
+                color: '#ffff00',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ffff00',
+                fillOpacity: 10
+              });
+            }
+            highlightLayer.openPopup();
+        }
+       var map = L.map('map').setView([-21.127834,-42.370363], 10);
+         zoomControl:false; 
+         maxZoom:15; 
+         minZoom:8;
+            L.tileLayer('http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png', {
+            attribution: 'Mapas &copy; OpenCycleMap, Dados do Mapa &copy; contribuidores do OpenStreetMap'
+            }).addTo(map);
+        
+var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        function pop_Muriae_Florestaao_IEF_2009_Pl_0(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">OBJECTID</th>\
+                        <td>' + (feature.properties['OBJECTID'] !== null ? autolinker.link(feature.properties['OBJECTID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>NOME</strong><br />' + (feature.properties['NOME'] !== null ? autolinker.link(feature.properties['NOME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">GEOMETRIAA</th>\
+                        <td>' + (feature.properties['GEOMETRIAA'] !== null ? autolinker.link(feature.properties['GEOMETRIAA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">CARACTERIS</th>\
+                        <td>' + (feature.properties['CARACTERIS'] !== null ? autolinker.link(feature.properties['CARACTERIS'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ESPECIEPRE</th>\
+                        <td>' + (feature.properties['ESPECIEPRE'] !== null ? autolinker.link(feature.properties['ESPECIEPRE'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">CLASSIFICA</th>\
+                        <td>' + (feature.properties['CLASSIFICA'] !== null ? autolinker.link(feature.properties['CLASSIFICA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DENSO</th>\
+                        <td>' + (feature.properties['DENSO'] !== null ? autolinker.link(feature.properties['DENSO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ALTURAMEDI</th>\
+                        <td>' + (feature.properties['ALTURAMEDI'] !== null ? autolinker.link(feature.properties['ALTURAMEDI'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ANTROPIZAD</th>\
+                        <td>' + (feature.properties['ANTROPIZAD'] !== null ? autolinker.link(feature.properties['ANTROPIZAD'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NOMEABREV</th>\
+                        <td>' + (feature.properties['NOMEABREV'] !== null ? autolinker.link(feature.properties['NOMEABREV'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">IEFTIPOFLO</th>\
+                        <td>' + (feature.properties['IEFTIPOFLO'] !== null ? autolinker.link(feature.properties['IEFTIPOFLO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">IEFTOPOGRA</th>\
+                        <td>' + (feature.properties['IEFTOPOGRA'] !== null ? autolinker.link(feature.properties['IEFTOPOGRA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">IEFAREA</th>\
+                        <td>' + (feature.properties['IEFAREA'] !== null ? autolinker.link(feature.properties['IEFAREA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Leng</th>\
+                        <td>' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Length</th>\
+                        <td>' + (feature.properties['Shape_Length'] !== null ? autolinker.link(feature.properties['Shape_Length'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Area</th>\
+                        <td>' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Muriae_Florestaao_IEF_2009_Pl_0_0(feature) {
+            switch(String(feature.properties['NOME'])) {
+                case 'Floresta estacional semidecidual montana':
+                    return {
+                pane: 'pane_Muriae_Florestaao_IEF_2009_Pl_0',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(202,164,39,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'Floresta estacional semidecidual sub montana':
+                    return {
+                pane: 'pane_Muriae_Florestaao_IEF_2009_Pl_0',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(17,215,169,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_Muriae_Florestaao_IEF_2009_Pl_0');
+        map.getPane('pane_Muriae_Florestaao_IEF_2009_Pl_0').style.zIndex = 400;
+        map.getPane('pane_Muriae_Florestaao_IEF_2009_Pl_0').style['mix-blend-mode'] = 'normal';
+        var layer_Muriae_Florestaao_IEF_2009_Pl_0 = new L.geoJson(json_Muriae_Florestaao_IEF_2009_Pl_0, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Muriae_Florestaao_IEF_2009_Pl_0',
+            layerName: 'layer_Muriae_Florestaao_IEF_2009_Pl_0',
+            pane: 'pane_Muriae_Florestaao_IEF_2009_Pl_0',
+            onEachFeature: pop_Muriae_Florestaao_IEF_2009_Pl_0,
+            style: style_Muriae_Florestaao_IEF_2009_Pl_0_0,
+        });
+        bounds_group.addLayer(layer_Muriae_Florestaao_IEF_2009_Pl_0);
+        function pop_Muriae_Unidade_Conservacao_Estadual_IEF_ICMBio_2021_jan_Pl_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">OBJECTID</th>\
+                        <td>' + (feature.properties['OBJECTID'] !== null ? autolinker.link(feature.properties['OBJECTID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>NOME_UC</strong><br />' + (feature.properties['NOME_UC'] !== null ? autolinker.link(feature.properties['NOME_UC'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>SIGLA</strong><br />' + (feature.properties['SIGLA'] !== null ? autolinker.link(feature.properties['SIGLA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">TIPO</th>\
+                        <td>' + (feature.properties['TIPO'] !== null ? autolinker.link(feature.properties['TIPO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ATO_LEGAL</th>\
+                        <td>' + (feature.properties['ATO_LEGAL'] !== null ? autolinker.link(feature.properties['ATO_LEGAL'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">AREA_OFIC</th>\
+                        <td>' + (feature.properties['AREA_OFIC'] !== null ? autolinker.link(feature.properties['AREA_OFIC'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">AREA_GEO</th>\
+                        <td>' + (feature.properties['AREA_GEO'] !== null ? autolinker.link(feature.properties['AREA_GEO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MUNICIPIOS</th>\
+                        <td>' + (feature.properties['MUNICIPIOS'] !== null ? autolinker.link(feature.properties['MUNICIPIOS'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">BIOMA</th>\
+                        <td>' + (feature.properties['BIOMA'] !== null ? autolinker.link(feature.properties['BIOMA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ADMINISTRA</th>\
+                        <td>' + (feature.properties['ADMINISTRA'] !== null ? autolinker.link(feature.properties['ADMINISTRA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">REG_IEF</th>\
+                        <td>' + (feature.properties['REG_IEF'] !== null ? autolinker.link(feature.properties['REG_IEF'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ID_UC_</th>\
+                        <td>' + (feature.properties['ID_UC_'] !== null ? autolinker.link(feature.properties['ID_UC_'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">V_ATUAL_</th>\
+                        <td>' + (feature.properties['V_ATUAL_'] !== null ? autolinker.link(feature.properties['V_ATUAL_'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Leng</th>\
+                        <td>' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Length</th>\
+                        <td>' + (feature.properties['Shape_Length'] !== null ? autolinker.link(feature.properties['Shape_Length'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Area</th>\
+                        <td>' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Muriae_Unidade_Conservacao_Estadual_IEF_ICMBio_2021_jan_Pl_1_0(feature) {
+            switch(String(feature.properties['NOME_UC'])) {
+                case 'Parque Estadual da Serra do Brigadeiro':
+                    return {
+                pane: 'pane_Muriae_Unidade_Conservacao_Estadual_IEF_ICMBio_2021_jan_Pl_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(209,66,227,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_Muriae_Unidade_Conservacao_Estadual_IEF_ICMBio_2021_jan_Pl_1');
+        map.getPane('pane_Muriae_Unidade_Conservacao_Estadual_IEF_ICMBio_2021_jan_Pl_1').style.zIndex = 401;
+        map.getPane('pane_Muriae_Unidade_Conservacao_Estadual_IEF_ICMBio_2021_jan_Pl_1').style['mix-blend-mode'] = 'normal';
+        var layer_Muriae_Unidade_Conservacao_Estadual_IEF_ICMBio_2021_jan_Pl_1 = new L.geoJson(json_Muriae_Unidade_Conservacao_Estadual_IEF_ICMBio_2021_jan_Pl_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Muriae_Unidade_Conservacao_Estadual_IEF_ICMBio_2021_jan_Pl_1',
+            layerName: 'layer_Muriae_Unidade_Conservacao_Estadual_IEF_ICMBio_2021_jan_Pl_1',
+            pane: 'pane_Muriae_Unidade_Conservacao_Estadual_IEF_ICMBio_2021_jan_Pl_1',
+            onEachFeature: pop_Muriae_Unidade_Conservacao_Estadual_IEF_ICMBio_2021_jan_Pl_1,
+            style: style_Muriae_Unidade_Conservacao_Estadual_IEF_ICMBio_2021_jan_Pl_1_0,
+        });
+        bounds_group.addLayer(layer_Muriae_Unidade_Conservacao_Estadual_IEF_ICMBio_2021_jan_Pl_1);
+        function pop_Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">OBJECTID</th>\
+                        <td>' + (feature.properties['OBJECTID'] !== null ? autolinker.link(feature.properties['OBJECTID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>NOME_UC</strong><br />' + (feature.properties['NOME_UC'] !== null ? autolinker.link(feature.properties['NOME_UC'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">SIGLA</th>\
+                        <td>' + (feature.properties['SIGLA'] !== null ? autolinker.link(feature.properties['SIGLA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">TIPO</th>\
+                        <td>' + (feature.properties['TIPO'] !== null ? autolinker.link(feature.properties['TIPO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ATO_LEGAL</th>\
+                        <td>' + (feature.properties['ATO_LEGAL'] !== null ? autolinker.link(feature.properties['ATO_LEGAL'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">AREA_OFIC</th>\
+                        <td>' + (feature.properties['AREA_OFIC'] !== null ? autolinker.link(feature.properties['AREA_OFIC'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">AREA_GEO</th>\
+                        <td>' + (feature.properties['AREA_GEO'] !== null ? autolinker.link(feature.properties['AREA_GEO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MUNICIPIOS</th>\
+                        <td>' + (feature.properties['MUNICIPIOS'] !== null ? autolinker.link(feature.properties['MUNICIPIOS'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">BIOMA</th>\
+                        <td>' + (feature.properties['BIOMA'] !== null ? autolinker.link(feature.properties['BIOMA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ADMINISTRA</th>\
+                        <td>' + (feature.properties['ADMINISTRA'] !== null ? autolinker.link(feature.properties['ADMINISTRA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">REG_IEF</th>\
+                        <td>' + (feature.properties['REG_IEF'] !== null ? autolinker.link(feature.properties['REG_IEF'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ID_UC_</th>\
+                        <td>' + (feature.properties['ID_UC_'] !== null ? autolinker.link(feature.properties['ID_UC_'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">V_ATUAL_</th>\
+                        <td>' + (feature.properties['V_ATUAL_'] !== null ? autolinker.link(feature.properties['V_ATUAL_'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Leng</th>\
+                        <td>' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Length</th>\
+                        <td>' + (feature.properties['Shape_Length'] !== null ? autolinker.link(feature.properties['Shape_Length'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Area</th>\
+                        <td>' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2_0(feature) {
+            switch(String(feature.properties['NOME_UC'])) {
+                case 'APA Municipal Água Limpa':
+                    return {
+                pane: 'pane_Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(64,30,216,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'APA Municipal Babilônia':
+                    return {
+                pane: 'pane_Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(185,223,14,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'APA Municipal de Ervália':
+                    return {
+                pane: 'pane_Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(94,169,229,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'APA Municipal Ninho das Garças':
+                    return {
+                pane: 'pane_Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(216,119,45,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'APA Municipal Pico do Itajuru':
+                    return {
+                pane: 'pane_Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(239,87,135,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'APA Municipal Pontão':
+                    return {
+                pane: 'pane_Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(29,226,18,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'APA Municipal Serra das Aranhas':
+                    return {
+                pane: 'pane_Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(140,230,203,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2');
+        map.getPane('pane_Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2').style.zIndex = 402;
+        map.getPane('pane_Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2').style['mix-blend-mode'] = 'normal';
+        var layer_Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2 = new L.geoJson(json_Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2',
+            layerName: 'layer_Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2',
+            pane: 'pane_Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2',
+            onEachFeature: pop_Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2,
+            style: style_Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2_0,
+        });
+        bounds_group.addLayer(layer_Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2);
+        function pop_Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">OBJECTID</th>\
+                        <td>' + (feature.properties['OBJECTID'] !== null ? autolinker.link(feature.properties['OBJECTID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">USO_2018</th>\
+                        <td>' + (feature.properties['USO_2018'] !== null ? autolinker.link(feature.properties['USO_2018'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">TIPO</th>\
+                        <td>' + (feature.properties['TIPO'] !== null ? autolinker.link(feature.properties['TIPO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Leng</th>\
+                        <td>' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Length</th>\
+                        <td>' + (feature.properties['Shape_Length'] !== null ? autolinker.link(feature.properties['Shape_Length'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Area</th>\
+                        <td>' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl_3_0(feature) {
+            switch(String(feature.properties['USO_2018'])) {
+                case 'Área Artificial':
+                    return {
+                pane: 'pane_Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.397)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(196,26,211,0.397)',
+                interactive: true,
+            }
+                    break;
+                case 'Mosaico de Ocupações em Área Florestal':
+                    return {
+                pane: 'pane_Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.397)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(93,217,155,0.397)',
+                interactive: true,
+            }
+                    break;
+                case 'Pastagem com Manejo':
+                    return {
+                pane: 'pane_Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,0.397)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(212,168,36,0.397)',
+                interactive: true,
+            }
+                    break;
+                case 'Vegetação Florestal':
+                    return {
+                pane: 'pane_Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl_3',
+                opacity: 1,
+                color: 'rgba(56,128,54,0.397)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(77,175,74,0.397)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl_3');
+        map.getPane('pane_Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl_3').style.zIndex = 403;
+        map.getPane('pane_Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl_3').style['mix-blend-mode'] = 'normal';
+        var layer_Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl_3 = new L.geoJson(json_Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl_3',
+            layerName: 'layer_Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl_3',
+            pane: 'pane_Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl_3',
+            onEachFeature: pop_Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl_3,
+            style: style_Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl_3_0,
+        });
+        bounds_group.addLayer(layer_Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl_3);
+        function pop_Muriae_Reserva_Particular_Patrimonio_Natural_IEF_ICMBio_2020_dez_Pl_4(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">OBJECTID</th>\
+                        <td>' + (feature.properties['OBJECTID'] !== null ? autolinker.link(feature.properties['OBJECTID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NOME_UC</th>\
+                        <td>' + (feature.properties['NOME_UC'] !== null ? autolinker.link(feature.properties['NOME_UC'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">SIGLA</th>\
+                        <td>' + (feature.properties['SIGLA'] !== null ? autolinker.link(feature.properties['SIGLA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">TIPO</th>\
+                        <td>' + (feature.properties['TIPO'] !== null ? autolinker.link(feature.properties['TIPO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ATO_LEGAL</th>\
+                        <td>' + (feature.properties['ATO_LEGAL'] !== null ? autolinker.link(feature.properties['ATO_LEGAL'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">AREA_OFIC</th>\
+                        <td>' + (feature.properties['AREA_OFIC'] !== null ? autolinker.link(feature.properties['AREA_OFIC'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">AREA_GEO</th>\
+                        <td>' + (feature.properties['AREA_GEO'] !== null ? autolinker.link(feature.properties['AREA_GEO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MUNICIPIOS</th>\
+                        <td>' + (feature.properties['MUNICIPIOS'] !== null ? autolinker.link(feature.properties['MUNICIPIOS'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">BIOMA</th>\
+                        <td>' + (feature.properties['BIOMA'] !== null ? autolinker.link(feature.properties['BIOMA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ADMINISTRA</th>\
+                        <td>' + (feature.properties['ADMINISTRA'] !== null ? autolinker.link(feature.properties['ADMINISTRA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">REG_IEF</th>\
+                        <td>' + (feature.properties['REG_IEF'] !== null ? autolinker.link(feature.properties['REG_IEF'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ID_UC_</th>\
+                        <td>' + (feature.properties['ID_UC_'] !== null ? autolinker.link(feature.properties['ID_UC_'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">V_ATUAL_</th>\
+                        <td>' + (feature.properties['V_ATUAL_'] !== null ? autolinker.link(feature.properties['V_ATUAL_'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Leng</th>\
+                        <td>' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Length</th>\
+                        <td>' + (feature.properties['Shape_Length'] !== null ? autolinker.link(feature.properties['Shape_Length'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Area</th>\
+                        <td>' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Muriae_Reserva_Particular_Patrimonio_Natural_IEF_ICMBio_2020_dez_Pl_4_0() {
+            return {
+                pane: 'pane_Muriae_Reserva_Particular_Patrimonio_Natural_IEF_ICMBio_2020_dez_Pl_4',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(133,182,111,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Muriae_Reserva_Particular_Patrimonio_Natural_IEF_ICMBio_2020_dez_Pl_4');
+        map.getPane('pane_Muriae_Reserva_Particular_Patrimonio_Natural_IEF_ICMBio_2020_dez_Pl_4').style.zIndex = 404;
+        map.getPane('pane_Muriae_Reserva_Particular_Patrimonio_Natural_IEF_ICMBio_2020_dez_Pl_4').style['mix-blend-mode'] = 'normal';
+        var layer_Muriae_Reserva_Particular_Patrimonio_Natural_IEF_ICMBio_2020_dez_Pl_4 = new L.geoJson(json_Muriae_Reserva_Particular_Patrimonio_Natural_IEF_ICMBio_2020_dez_Pl_4, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Muriae_Reserva_Particular_Patrimonio_Natural_IEF_ICMBio_2020_dez_Pl_4',
+            layerName: 'layer_Muriae_Reserva_Particular_Patrimonio_Natural_IEF_ICMBio_2020_dez_Pl_4',
+            pane: 'pane_Muriae_Reserva_Particular_Patrimonio_Natural_IEF_ICMBio_2020_dez_Pl_4',
+            onEachFeature: pop_Muriae_Reserva_Particular_Patrimonio_Natural_IEF_ICMBio_2020_dez_Pl_4,
+            style: style_Muriae_Reserva_Particular_Patrimonio_Natural_IEF_ICMBio_2020_dez_Pl_4_0,
+        });
+        bounds_group.addLayer(layer_Muriae_Reserva_Particular_Patrimonio_Natural_IEF_ICMBio_2020_dez_Pl_4);
+        function pop_Muriae_Massa_Dagua_Pl_5(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['OBJECTID'] !== null ? autolinker.link(feature.properties['OBJECTID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NOME</th>\
+                        <td>' + (feature.properties['NOME'] !== null ? autolinker.link(feature.properties['NOME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">GEOMETRIAA</th>\
+                        <td>' + (feature.properties['GEOMETRIAA'] !== null ? autolinker.link(feature.properties['GEOMETRIAA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">TIPOMASSAD</th>\
+                        <td>' + (feature.properties['TIPOMASSAD'] !== null ? autolinker.link(feature.properties['TIPOMASSAD'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">REGIME</th>\
+                        <td>' + (feature.properties['REGIME'] !== null ? autolinker.link(feature.properties['REGIME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">SALINIDADE</th>\
+                        <td>' + (feature.properties['SALINIDADE'] !== null ? autolinker.link(feature.properties['SALINIDADE'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">IGAGEOCODI</th>\
+                        <td>' + (feature.properties['IGAGEOCODI'] !== null ? autolinker.link(feature.properties['IGAGEOCODI'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">IGAMI</th>\
+                        <td>' + (feature.properties['IGAMI'] !== null ? autolinker.link(feature.properties['IGAMI'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Length'] !== null ? autolinker.link(feature.properties['Shape_Length'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Muriae_Massa_Dagua_Pl_5_0() {
+            return {
+                pane: 'pane_Muriae_Massa_Dagua_Pl_5',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(40,148,230,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Muriae_Massa_Dagua_Pl_5');
+        map.getPane('pane_Muriae_Massa_Dagua_Pl_5').style.zIndex = 405;
+        map.getPane('pane_Muriae_Massa_Dagua_Pl_5').style['mix-blend-mode'] = 'normal';
+        var layer_Muriae_Massa_Dagua_Pl_5 = new L.geoJson(json_Muriae_Massa_Dagua_Pl_5, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Muriae_Massa_Dagua_Pl_5',
+            layerName: 'layer_Muriae_Massa_Dagua_Pl_5',
+            pane: 'pane_Muriae_Massa_Dagua_Pl_5',
+            onEachFeature: pop_Muriae_Massa_Dagua_Pl_5,
+            style: style_Muriae_Massa_Dagua_Pl_5_0,
+        });
+        bounds_group.addLayer(layer_Muriae_Massa_Dagua_Pl_5);
+        function pop_Muriae_Ponto_Cotado_Altimetrico_P_6(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">OBJECTID</th>\
+                        <td>' + (feature.properties['OBJECTID'] !== null ? autolinker.link(feature.properties['OBJECTID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">GEOMETRIAA</th>\
+                        <td>' + (feature.properties['GEOMETRIAA'] !== null ? autolinker.link(feature.properties['GEOMETRIAA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">COTACOMPRO</th>\
+                        <td>' + (feature.properties['COTACOMPRO'] !== null ? autolinker.link(feature.properties['COTACOMPRO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">COTA</th>\
+                        <td>' + (feature.properties['COTA'] !== null ? autolinker.link(feature.properties['COTA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">IGAMI</th>\
+                        <td>' + (feature.properties['IGAMI'] !== null ? autolinker.link(feature.properties['IGAMI'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">IGAFUSO</th>\
+                        <td>' + (feature.properties['IGAFUSO'] !== null ? autolinker.link(feature.properties['IGAFUSO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">IGALONGUTM</th>\
+                        <td>' + (feature.properties['IGALONGUTM'] !== null ? autolinker.link(feature.properties['IGALONGUTM'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">IGALATUTM</th>\
+                        <td>' + (feature.properties['IGALATUTM'] !== null ? autolinker.link(feature.properties['IGALATUTM'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">IGALONGDEC</th>\
+                        <td>' + (feature.properties['IGALONGDEC'] !== null ? autolinker.link(feature.properties['IGALONGDEC'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">IGALATDECI</th>\
+                        <td>' + (feature.properties['IGALATDECI'] !== null ? autolinker.link(feature.properties['IGALATDECI'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">IGAGEOCODI</th>\
+                        <td>' + (feature.properties['IGAGEOCODI'] !== null ? autolinker.link(feature.properties['IGAGEOCODI'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">COTAC</th>\
+                        <td>' + (feature.properties['COTAC'] !== null ? autolinker.link(feature.properties['COTAC'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Muriae_Ponto_Cotado_Altimetrico_P_6_0() {
+            return {
+                pane: 'pane_Muriae_Ponto_Cotado_Altimetrico_P_6',
+                shape: 'triangle',
+                radius: 3.6,
+                opacity: 1,
+                color: 'rgba(255,255,255,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,0,0,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Muriae_Ponto_Cotado_Altimetrico_P_6');
+        map.getPane('pane_Muriae_Ponto_Cotado_Altimetrico_P_6').style.zIndex = 406;
+        map.getPane('pane_Muriae_Ponto_Cotado_Altimetrico_P_6').style['mix-blend-mode'] = 'normal';
+        var layer_Muriae_Ponto_Cotado_Altimetrico_P_6 = new L.geoJson(json_Muriae_Ponto_Cotado_Altimetrico_P_6, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Muriae_Ponto_Cotado_Altimetrico_P_6',
+            layerName: 'layer_Muriae_Ponto_Cotado_Altimetrico_P_6',
+            pane: 'pane_Muriae_Ponto_Cotado_Altimetrico_P_6',
+            onEachFeature: pop_Muriae_Ponto_Cotado_Altimetrico_P_6,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.shapeMarker(latlng, style_Muriae_Ponto_Cotado_Altimetrico_P_6_0(feature));
+            },
+        });
+        var cluster_Muriae_Ponto_Cotado_Altimetrico_P_6 = new L.MarkerClusterGroup({showCoverageOnHover: false,
+            spiderfyDistanceMultiplier: 2});
+        cluster_Muriae_Ponto_Cotado_Altimetrico_P_6.addLayer(layer_Muriae_Ponto_Cotado_Altimetrico_P_6);
+
+        bounds_group.addLayer(layer_Muriae_Ponto_Cotado_Altimetrico_P_6);
+        function pop_Muriae_Reservatorio_Hidrico_Pl_7(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">OBJECTID</th>\
+                        <td>' + (feature.properties['OBJECTID'] !== null ? autolinker.link(feature.properties['OBJECTID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NOME</th>\
+                        <td>' + (feature.properties['NOME'] !== null ? autolinker.link(feature.properties['NOME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">GEOMETRIAA</th>\
+                        <td>' + (feature.properties['GEOMETRIAA'] !== null ? autolinker.link(feature.properties['GEOMETRIAA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NAMAXIMOMA</th>\
+                        <td>' + (feature.properties['NAMAXIMOMA'] !== null ? autolinker.link(feature.properties['NAMAXIMOMA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">USOPRINCIP</th>\
+                        <td>' + (feature.properties['USOPRINCIP'] !== null ? autolinker.link(feature.properties['USOPRINCIP'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">VOLUMEUTIL</th>\
+                        <td>' + (feature.properties['VOLUMEUTIL'] !== null ? autolinker.link(feature.properties['VOLUMEUTIL'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NAMAXIMOOP</th>\
+                        <td>' + (feature.properties['NAMAXIMOOP'] !== null ? autolinker.link(feature.properties['NAMAXIMOOP'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NOMEABREV</th>\
+                        <td>' + (feature.properties['NOMEABREV'] !== null ? autolinker.link(feature.properties['NOMEABREV'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Leng</th>\
+                        <td>' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Length</th>\
+                        <td>' + (feature.properties['Shape_Length'] !== null ? autolinker.link(feature.properties['Shape_Length'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Area</th>\
+                        <td>' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Muriae_Reservatorio_Hidrico_Pl_7_0() {
+            return {
+                pane: 'pane_Muriae_Reservatorio_Hidrico_Pl_7',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(35,57,222,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Muriae_Reservatorio_Hidrico_Pl_7');
+        map.getPane('pane_Muriae_Reservatorio_Hidrico_Pl_7').style.zIndex = 407;
+        map.getPane('pane_Muriae_Reservatorio_Hidrico_Pl_7').style['mix-blend-mode'] = 'normal';
+        var layer_Muriae_Reservatorio_Hidrico_Pl_7 = new L.geoJson(json_Muriae_Reservatorio_Hidrico_Pl_7, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Muriae_Reservatorio_Hidrico_Pl_7',
+            layerName: 'layer_Muriae_Reservatorio_Hidrico_Pl_7',
+            pane: 'pane_Muriae_Reservatorio_Hidrico_Pl_7',
+            onEachFeature: pop_Muriae_Reservatorio_Hidrico_Pl_7,
+            style: style_Muriae_Reservatorio_Hidrico_Pl_7_0,
+        });
+        bounds_group.addLayer(layer_Muriae_Reservatorio_Hidrico_Pl_7);
+        function pop_Muriae_Pista_Ponto_Pouso_P_8(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">OBJECTID</th>\
+                        <td>' + (feature.properties['OBJECTID'] !== null ? autolinker.link(feature.properties['OBJECTID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>IGANOME</strong><br />' + (feature.properties['IGANOME'] !== null ? autolinker.link(feature.properties['IGANOME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">GEOMETRIAA</th>\
+                        <td>' + (feature.properties['GEOMETRIAA'] !== null ? autolinker.link(feature.properties['GEOMETRIAA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">TIPOPISTA</th>\
+                        <td>' + (feature.properties['TIPOPISTA'] !== null ? autolinker.link(feature.properties['TIPOPISTA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">USOPISTA</th>\
+                        <td>' + (feature.properties['USOPISTA'] !== null ? autolinker.link(feature.properties['USOPISTA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">REVESTIMEN</th>\
+                        <td>' + (feature.properties['REVESTIMEN'] !== null ? autolinker.link(feature.properties['REVESTIMEN'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">HOMOLOGACA</th>\
+                        <td>' + (feature.properties['HOMOLOGACA'] !== null ? autolinker.link(feature.properties['HOMOLOGACA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">OPERACIONA</th>\
+                        <td>' + (feature.properties['OPERACIONA'] !== null ? autolinker.link(feature.properties['OPERACIONA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">SITUACAOFI</th>\
+                        <td>' + (feature.properties['SITUACAOFI'] !== null ? autolinker.link(feature.properties['SITUACAOFI'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">LARGURA</th>\
+                        <td>' + (feature.properties['LARGURA'] !== null ? autolinker.link(feature.properties['LARGURA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">EXTENSAO</th>\
+                        <td>' + (feature.properties['EXTENSAO'] !== null ? autolinker.link(feature.properties['EXTENSAO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NOMEABREV</th>\
+                        <td>' + (feature.properties['NOMEABREV'] !== null ? autolinker.link(feature.properties['NOMEABREV'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">IGAMUNICIP</th>\
+                        <td>' + (feature.properties['IGAMUNICIP'] !== null ? autolinker.link(feature.properties['IGAMUNICIP'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">IGADISTRIT</th>\
+                        <td>' + (feature.properties['IGADISTRIT'] !== null ? autolinker.link(feature.properties['IGADISTRIT'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Muriae_Pista_Ponto_Pouso_P_8_0() {
+            return {
+                pane: 'pane_Muriae_Pista_Ponto_Pouso_P_8',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(141,90,153,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Muriae_Pista_Ponto_Pouso_P_8');
+        map.getPane('pane_Muriae_Pista_Ponto_Pouso_P_8').style.zIndex = 408;
+        map.getPane('pane_Muriae_Pista_Ponto_Pouso_P_8').style['mix-blend-mode'] = 'normal';
+        var layer_Muriae_Pista_Ponto_Pouso_P_8 = new L.geoJson(json_Muriae_Pista_Ponto_Pouso_P_8, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Muriae_Pista_Ponto_Pouso_P_8',
+            layerName: 'layer_Muriae_Pista_Ponto_Pouso_P_8',
+            pane: 'pane_Muriae_Pista_Ponto_Pouso_P_8',
+            onEachFeature: pop_Muriae_Pista_Ponto_Pouso_P_8,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_Muriae_Pista_Ponto_Pouso_P_8_0(feature));
+            },
+        });
+        var cluster_Muriae_Pista_Ponto_Pouso_P_8 = new L.MarkerClusterGroup({showCoverageOnHover: false,
+            spiderfyDistanceMultiplier: 2});
+        cluster_Muriae_Pista_Ponto_Pouso_P_8.addLayer(layer_Muriae_Pista_Ponto_Pouso_P_8);
+
+        bounds_group.addLayer(layer_Muriae_Pista_Ponto_Pouso_P_8);
+        function pop_Muriae_Ponte_DER_2011_P_9(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">OBJECTID</th>\
+                        <td>' + (feature.properties['OBJECTID'] !== null ? autolinker.link(feature.properties['OBJECTID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NOME</th>\
+                        <td>' + (feature.properties['NOME'] !== null ? autolinker.link(feature.properties['NOME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MAT_CONSTR</th>\
+                        <td>' + (feature.properties['MAT_CONSTR'] !== null ? autolinker.link(feature.properties['MAT_CONSTR'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">EXTENSAO</th>\
+                        <td>' + (feature.properties['EXTENSAO'] !== null ? autolinker.link(feature.properties['EXTENSAO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">RODOVIA</th>\
+                        <td>' + (feature.properties['RODOVIA'] !== null ? autolinker.link(feature.properties['RODOVIA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">KM_INICIAL</th>\
+                        <td>' + (feature.properties['KM_INICIAL'] !== null ? autolinker.link(feature.properties['KM_INICIAL'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MUNICIPIO</th>\
+                        <td>' + (feature.properties['MUNICIPIO'] !== null ? autolinker.link(feature.properties['MUNICIPIO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">CURSO_DAGU</th>\
+                        <td>' + (feature.properties['CURSO_DAGU'] !== null ? autolinker.link(feature.properties['CURSO_DAGU'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Muriae_Ponte_DER_2011_P_9_0() {
+            return {
+                pane: 'pane_Muriae_Ponte_DER_2011_P_9',
+                shape: 'diamond',
+                radius: 8.8,
+                opacity: 1,
+                color: 'rgba(128,17,25,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(219,30,42,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Muriae_Ponte_DER_2011_P_9');
+        map.getPane('pane_Muriae_Ponte_DER_2011_P_9').style.zIndex = 409;
+        map.getPane('pane_Muriae_Ponte_DER_2011_P_9').style['mix-blend-mode'] = 'normal';
+        var layer_Muriae_Ponte_DER_2011_P_9 = new L.geoJson(json_Muriae_Ponte_DER_2011_P_9, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Muriae_Ponte_DER_2011_P_9',
+            layerName: 'layer_Muriae_Ponte_DER_2011_P_9',
+            pane: 'pane_Muriae_Ponte_DER_2011_P_9',
+            onEachFeature: pop_Muriae_Ponte_DER_2011_P_9,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.shapeMarker(latlng, style_Muriae_Ponte_DER_2011_P_9_0(feature));
+            },
+        });
+        var cluster_Muriae_Ponte_DER_2011_P_9 = new L.MarkerClusterGroup({showCoverageOnHover: false,
+            spiderfyDistanceMultiplier: 2});
+        cluster_Muriae_Ponte_DER_2011_P_9.addLayer(layer_Muriae_Ponte_DER_2011_P_9);
+
+        bounds_group.addLayer(layer_Muriae_Ponte_DER_2011_P_9);
+        function pop_Muriae_Hidrografia_2011_L_10(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">OBJECTID</th>\
+                        <td>' + (feature.properties['OBJECTID'] !== null ? autolinker.link(feature.properties['OBJECTID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ID</th>\
+                        <td>' + (feature.properties['ID'] !== null ? autolinker.link(feature.properties['ID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NOME</th>\
+                        <td>' + (feature.properties['NOME'] !== null ? autolinker.link(feature.properties['NOME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NUORDEMCDA</th>\
+                        <td>' + (feature.properties['NUORDEMCDA'] !== null ? autolinker.link(feature.properties['NUORDEMCDA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NUNIVOTCDA</th>\
+                        <td>' + (feature.properties['NUNIVOTCDA'] !== null ? autolinker.link(feature.properties['NUNIVOTCDA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Leng</th>\
+                        <td>' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Length</th>\
+                        <td>' + (feature.properties['Shape_Length'] !== null ? autolinker.link(feature.properties['Shape_Length'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Muriae_Hidrografia_2011_L_10_0() {
+            return {
+                pane: 'pane_Muriae_Hidrografia_2011_L_10',
+                opacity: 1,
+                color: 'rgba(54,229,224,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Muriae_Hidrografia_2011_L_10');
+        map.getPane('pane_Muriae_Hidrografia_2011_L_10').style.zIndex = 410;
+        map.getPane('pane_Muriae_Hidrografia_2011_L_10').style['mix-blend-mode'] = 'normal';
+        var layer_Muriae_Hidrografia_2011_L_10 = new L.geoJson(json_Muriae_Hidrografia_2011_L_10, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Muriae_Hidrografia_2011_L_10',
+            layerName: 'layer_Muriae_Hidrografia_2011_L_10',
+            pane: 'pane_Muriae_Hidrografia_2011_L_10',
+            onEachFeature: pop_Muriae_Hidrografia_2011_L_10,
+            style: style_Muriae_Hidrografia_2011_L_10_0,
+        });
+        bounds_group.addLayer(layer_Muriae_Hidrografia_2011_L_10);
+        function pop_Muriae_Trecho_Rodoviario_DER_2019_L_11(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">OBJECTID</th>\
+                        <td>' + (feature.properties['OBJECTID'] !== null ? autolinker.link(feature.properties['OBJECTID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">SIGLA_RODO</th>\
+                        <td>' + (feature.properties['SIGLA_RODO'] !== null ? autolinker.link(feature.properties['SIGLA_RODO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">RESPONSAVE</th>\
+                        <td>' + (feature.properties['RESPONSAVE'] !== null ? autolinker.link(feature.properties['RESPONSAVE'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">SITUACAO_F</th>\
+                        <td>' + (feature.properties['SITUACAO_F'] !== null ? autolinker.link(feature.properties['SITUACAO_F'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">JURISDICAO</th>\
+                        <td>' + (feature.properties['JURISDICAO'] !== null ? autolinker.link(feature.properties['JURISDICAO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">CLASSE_FUN</th>\
+                        <td>' + (feature.properties['CLASSE_FUN'] !== null ? autolinker.link(feature.properties['CLASSE_FUN'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">SENTIDO_TR</th>\
+                        <td>' + (feature.properties['SENTIDO_TR'] !== null ? autolinker.link(feature.properties['SENTIDO_TR'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Leng</th>\
+                        <td>' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Length</th>\
+                        <td>' + (feature.properties['Shape_Length'] !== null ? autolinker.link(feature.properties['Shape_Length'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Muriae_Trecho_Rodoviario_DER_2019_L_11_0() {
+            return {
+                pane: 'pane_Muriae_Trecho_Rodoviario_DER_2019_L_11',
+                opacity: 1,
+                color: 'rgba(231,113,72,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Muriae_Trecho_Rodoviario_DER_2019_L_11');
+        map.getPane('pane_Muriae_Trecho_Rodoviario_DER_2019_L_11').style.zIndex = 411;
+        map.getPane('pane_Muriae_Trecho_Rodoviario_DER_2019_L_11').style['mix-blend-mode'] = 'normal';
+        var layer_Muriae_Trecho_Rodoviario_DER_2019_L_11 = new L.geoJson(json_Muriae_Trecho_Rodoviario_DER_2019_L_11, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Muriae_Trecho_Rodoviario_DER_2019_L_11',
+            layerName: 'layer_Muriae_Trecho_Rodoviario_DER_2019_L_11',
+            pane: 'pane_Muriae_Trecho_Rodoviario_DER_2019_L_11',
+            onEachFeature: pop_Muriae_Trecho_Rodoviario_DER_2019_L_11,
+            style: style_Muriae_Trecho_Rodoviario_DER_2019_L_11_0,
+        });
+        bounds_group.addLayer(layer_Muriae_Trecho_Rodoviario_DER_2019_L_11);
+        function pop_Muriae_Vila_2021_jul_P_12(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">OBJECTID</th>\
+                        <td>' + (feature.properties['OBJECTID'] !== null ? autolinker.link(feature.properties['OBJECTID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>NOME</strong><br />' + (feature.properties['NOME'] !== null ? autolinker.link(feature.properties['NOME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">GEOCODIGO</th>\
+                        <td>' + (feature.properties['GEOCODIGO'] !== null ? autolinker.link(feature.properties['GEOCODIGO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">LAT</th>\
+                        <td>' + (feature.properties['LAT'] !== null ? autolinker.link(feature.properties['LAT'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">LONG</th>\
+                        <td>' + (feature.properties['LONG'] !== null ? autolinker.link(feature.properties['LONG'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MUNICIPIO</th>\
+                        <td>' + (feature.properties['MUNICIPIO'] !== null ? autolinker.link(feature.properties['MUNICIPIO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">GEOCODIGOM</th>\
+                        <td>' + (feature.properties['GEOCODIGOM'] !== null ? autolinker.link(feature.properties['GEOCODIGOM'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Muriae_Vila_2021_jul_P_12_0() {
+            return {
+                pane: 'pane_Muriae_Vila_2021_jul_P_12',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(196,60,57,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Muriae_Vila_2021_jul_P_12');
+        map.getPane('pane_Muriae_Vila_2021_jul_P_12').style.zIndex = 412;
+        map.getPane('pane_Muriae_Vila_2021_jul_P_12').style['mix-blend-mode'] = 'normal';
+        var layer_Muriae_Vila_2021_jul_P_12 = new L.geoJson(json_Muriae_Vila_2021_jul_P_12, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Muriae_Vila_2021_jul_P_12',
+            layerName: 'layer_Muriae_Vila_2021_jul_P_12',
+            pane: 'pane_Muriae_Vila_2021_jul_P_12',
+            onEachFeature: pop_Muriae_Vila_2021_jul_P_12,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_Muriae_Vila_2021_jul_P_12_0(feature));
+            },
+        });
+        var cluster_Muriae_Vila_2021_jul_P_12 = new L.MarkerClusterGroup({showCoverageOnHover: false,
+            spiderfyDistanceMultiplier: 2});
+        cluster_Muriae_Vila_2021_jul_P_12.addLayer(layer_Muriae_Vila_2021_jul_P_12);
+
+        bounds_group.addLayer(layer_Muriae_Vila_2021_jul_P_12);
+        function pop_Muriae_Microregiao_IBGE_2015_jul_Pl_13(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">OBJECTID</th>\
+                        <td>' + (feature.properties['OBJECTID'] !== null ? autolinker.link(feature.properties['OBJECTID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NOME</th>\
+                        <td>' + (feature.properties['NOME'] !== null ? autolinker.link(feature.properties['NOME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">GEOCODIGO</th>\
+                        <td>' + (feature.properties['GEOCODIGO'] !== null ? autolinker.link(feature.properties['GEOCODIGO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ANODEREFER</th>\
+                        <td>' + (feature.properties['ANODEREFER'] !== null ? autolinker.link(feature.properties['ANODEREFER'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">LEICRIACAO</th>\
+                        <td>' + (feature.properties['LEICRIACAO'] !== null ? autolinker.link(feature.properties['LEICRIACAO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">AREA</th>\
+                        <td>' + (feature.properties['AREA'] !== null ? autolinker.link(feature.properties['AREA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Length</th>\
+                        <td>' + (feature.properties['Shape_Length'] !== null ? autolinker.link(feature.properties['Shape_Length'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Area</th>\
+                        <td>' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Muriae_Microregiao_IBGE_2015_jul_Pl_13_0() {
+            return {
+                pane: 'pane_Muriae_Microregiao_IBGE_2015_jul_Pl_13',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(145,82,45,0.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Muriae_Microregiao_IBGE_2015_jul_Pl_13');
+        map.getPane('pane_Muriae_Microregiao_IBGE_2015_jul_Pl_13').style.zIndex = 413;
+        map.getPane('pane_Muriae_Microregiao_IBGE_2015_jul_Pl_13').style['mix-blend-mode'] = 'normal';
+        var layer_Muriae_Microregiao_IBGE_2015_jul_Pl_13 = new L.geoJson(json_Muriae_Microregiao_IBGE_2015_jul_Pl_13, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Muriae_Microregiao_IBGE_2015_jul_Pl_13',
+            layerName: 'layer_Muriae_Microregiao_IBGE_2015_jul_Pl_13',
+            pane: 'pane_Muriae_Microregiao_IBGE_2015_jul_Pl_13',
+            onEachFeature: pop_Muriae_Microregiao_IBGE_2015_jul_Pl_13,
+            style: style_Muriae_Microregiao_IBGE_2015_jul_Pl_13_0,
+        });
+        bounds_group.addLayer(layer_Muriae_Microregiao_IBGE_2015_jul_Pl_13);
+        function pop_Muriae_Limite_Distrital_2021_jul_L_14(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">OBJECTID</th>\
+                        <td>' + (feature.properties['OBJECTID'] !== null ? autolinker.link(feature.properties['OBJECTID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NOME</th>\
+                        <td>' + (feature.properties['NOME'] !== null ? autolinker.link(feature.properties['NOME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">GEOCODIGO</th>\
+                        <td>' + (feature.properties['GEOCODIGO'] !== null ? autolinker.link(feature.properties['GEOCODIGO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ANODEREFER</th>\
+                        <td>' + (feature.properties['ANODEREFER'] !== null ? autolinker.link(feature.properties['ANODEREFER'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">LEICRIACAO</th>\
+                        <td>' + (feature.properties['LEICRIACAO'] !== null ? autolinker.link(feature.properties['LEICRIACAO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">AREA</th>\
+                        <td>' + (feature.properties['AREA'] !== null ? autolinker.link(feature.properties['AREA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">MUNICIPIO</th>\
+                        <td>' + (feature.properties['MUNICIPIO'] !== null ? autolinker.link(feature.properties['MUNICIPIO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">GEOCODIGOM</th>\
+                        <td>' + (feature.properties['GEOCODIGOM'] !== null ? autolinker.link(feature.properties['GEOCODIGOM'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Leng</th>\
+                        <td>' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Length</th>\
+                        <td>' + (feature.properties['Shape_Length'] !== null ? autolinker.link(feature.properties['Shape_Length'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Muriae_Limite_Distrital_2021_jul_L_14_0(feature) {
+            switch(String(feature.properties['NOME'])) {
+                case 'Belisário':
+                    return {
+                pane: 'pane_Muriae_Limite_Distrital_2021_jul_L_14',
+                opacity: 1,
+                color: 'rgba(210,187,54,1.0)',
+                dashArray: '',
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: 3.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+                case 'Boa Família':
+                    return {
+                pane: 'pane_Muriae_Limite_Distrital_2021_jul_L_14',
+                opacity: 1,
+                color: 'rgba(125,202,73,1.0)',
+                dashArray: '',
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: 3.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+                case 'Bom Jesus da Cachoeira':
+                    return {
+                pane: 'pane_Muriae_Limite_Distrital_2021_jul_L_14',
+                opacity: 1,
+                color: 'rgba(44,145,195,1.0)',
+                dashArray: '',
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: 3.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+                case 'Itamuri':
+                    return {
+                pane: 'pane_Muriae_Limite_Distrital_2021_jul_L_14',
+                opacity: 1,
+                color: 'rgba(12,192,36,1.0)',
+                dashArray: '',
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: 3.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+                case 'Muriaé':
+                    return {
+                pane: 'pane_Muriae_Limite_Distrital_2021_jul_L_14',
+                opacity: 1,
+                color: 'rgba(63,234,253,1.0)',
+                dashArray: '',
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: 3.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+                case 'Pirapanema':
+                    return {
+                pane: 'pane_Muriae_Limite_Distrital_2021_jul_L_14',
+                opacity: 1,
+                color: 'rgba(226,135,190,1.0)',
+                dashArray: '',
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: 3.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+                case 'Vermelho':
+                    return {
+                pane: 'pane_Muriae_Limite_Distrital_2021_jul_L_14',
+                opacity: 1,
+                color: 'rgba(205,23,141,1.0)',
+                dashArray: '',
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: 3.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_Muriae_Limite_Distrital_2021_jul_L_14');
+        map.getPane('pane_Muriae_Limite_Distrital_2021_jul_L_14').style.zIndex = 414;
+        map.getPane('pane_Muriae_Limite_Distrital_2021_jul_L_14').style['mix-blend-mode'] = 'normal';
+        var layer_Muriae_Limite_Distrital_2021_jul_L_14 = new L.geoJson(json_Muriae_Limite_Distrital_2021_jul_L_14, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Muriae_Limite_Distrital_2021_jul_L_14',
+            layerName: 'layer_Muriae_Limite_Distrital_2021_jul_L_14',
+            pane: 'pane_Muriae_Limite_Distrital_2021_jul_L_14',
+            onEachFeature: pop_Muriae_Limite_Distrital_2021_jul_L_14,
+            style: style_Muriae_Limite_Distrital_2021_jul_L_14_0,
+        });
+        bounds_group.addLayer(layer_Muriae_Limite_Distrital_2021_jul_L_14);
+        function pop_Muriae_Limite_Municipal_2021_fev_Pl_15(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">OBJECTID</th>\
+                        <td>' + (feature.properties['OBJECTID'] !== null ? autolinker.link(feature.properties['OBJECTID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NOME</th>\
+                        <td>' + (feature.properties['NOME'] !== null ? autolinker.link(feature.properties['NOME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">GEOCODIGO</th>\
+                        <td>' + (feature.properties['GEOCODIGO'] !== null ? autolinker.link(feature.properties['GEOCODIGO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ANODEREFER</th>\
+                        <td>' + (feature.properties['ANODEREFER'] !== null ? autolinker.link(feature.properties['ANODEREFER'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">LEICRIACAO</th>\
+                        <td>' + (feature.properties['LEICRIACAO'] !== null ? autolinker.link(feature.properties['LEICRIACAO'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">AREA</th>\
+                        <td>' + (feature.properties['AREA'] !== null ? autolinker.link(feature.properties['AREA'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Leng</th>\
+                        <td>' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Length</th>\
+                        <td>' + (feature.properties['Shape_Length'] !== null ? autolinker.link(feature.properties['Shape_Length'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Area</th>\
+                        <td>' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Muriae_Limite_Municipal_2021_fev_Pl_15_0() {
+            return {
+                pane: 'pane_Muriae_Limite_Municipal_2021_fev_Pl_15',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '10,5,1,5,1,5',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 5.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(243,166,178,0.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Muriae_Limite_Municipal_2021_fev_Pl_15');
+        map.getPane('pane_Muriae_Limite_Municipal_2021_fev_Pl_15').style.zIndex = 415;
+        map.getPane('pane_Muriae_Limite_Municipal_2021_fev_Pl_15').style['mix-blend-mode'] = 'normal';
+        var layer_Muriae_Limite_Municipal_2021_fev_Pl_15 = new L.geoJson(json_Muriae_Limite_Municipal_2021_fev_Pl_15, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Muriae_Limite_Municipal_2021_fev_Pl_15',
+            layerName: 'layer_Muriae_Limite_Municipal_2021_fev_Pl_15',
+            pane: 'pane_Muriae_Limite_Municipal_2021_fev_Pl_15',
+            onEachFeature: pop_Muriae_Limite_Municipal_2021_fev_Pl_15,
+            style: style_Muriae_Limite_Municipal_2021_fev_Pl_15_0,
+        });
+        bounds_group.addLayer(layer_Muriae_Limite_Municipal_2021_fev_Pl_15);
+        map.addLayer(layer_Muriae_Limite_Municipal_2021_fev_Pl_15);
+        var osmGeocoder = new L.Control.Geocoder({
+            collapsed: true,
+            position: 'topleft',
+            text: 'Search',
+            title: 'Testing'
+        }).addTo(map);
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .className += ' fa fa-search';
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .title += 'Search for a place';
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'<img src="legend/Muriae_Limite_Municipal_2021_fev_Pl_15.png" /> Muriae_Limite_Municipal_2021_fev_Pl':
+         layer_Muriae_Limite_Municipal_2021_fev_Pl_15,'Muriae_Limite_Distrital_2021_jul_L <br /><table><tr><td style="text-align: center;"><img src="legend/Muriae_Limite_Distrital_2021_jul_L_14_Belisário0.png" /></td><td>Belisário</td></tr><tr><td style="text-align: center;"><img src="legend/Muriae_Limite_Distrital_2021_jul_L_14_BoaFamília1.png" /></td><td>Boa Família</td></tr><tr><td style="text-align: center;"><img src="legend/Muriae_Limite_Distrital_2021_jul_L_14_BomJesusdaCachoeira2.png" /></td><td>Bom Jesus da Cachoeira</td></tr><tr><td style="text-align: center;"><img src="legend/Muriae_Limite_Distrital_2021_jul_L_14_Itamuri3.png" /></td><td>Itamuri</td></tr><tr><td style="text-align: center;"><img src="legend/Muriae_Limite_Distrital_2021_jul_L_14_Muriaé4.png" /></td><td>Muriaé</td></tr><tr><td style="text-align: center;"><img src="legend/Muriae_Limite_Distrital_2021_jul_L_14_Pirapanema5.png" /></td><td>Pirapanema</td></tr><tr><td style="text-align: center;"><img src="legend/Muriae_Limite_Distrital_2021_jul_L_14_Vermelho6.png" /></td><td>Vermelho</td></tr></table>': layer_Muriae_Limite_Distrital_2021_jul_L_14,'<img src="legend/Muriae_Microregiao_IBGE_2015_jul_Pl_13.png" /> Muriae_Microregiao_IBGE_2015_jul_Pl':
+         layer_Muriae_Microregiao_IBGE_2015_jul_Pl_13,'<img src="legend/Muriae_Vila_2021_jul_P_12.png" /> Muriae_Vila_2021_jul_P':
+         cluster_Muriae_Vila_2021_jul_P_12,'<img src="legend/Muriae_Trecho_Rodoviario_DER_2019_L_11.png" /> Muriae_Trecho_Rodoviario_DER_2019_L ':
+         layer_Muriae_Trecho_Rodoviario_DER_2019_L_11,'<img src="legend/Muriae_Hidrografia_2011_L_10.png" /> Muriae_Hidrografia_2011_L':
+         layer_Muriae_Hidrografia_2011_L_10,'<img src="legend/Muriae_Ponte_DER_2011_P_9.png" /> Muriae_Ponte_DER_2011_P':
+         cluster_Muriae_Ponte_DER_2011_P_9,'<img src="legend/Muriae_Pista_Ponto_Pouso_P_8.png" /> Muriae_Pista_Ponto_Pouso_P':
+         cluster_Muriae_Pista_Ponto_Pouso_P_8,'<img src="legend/Muriae_Reservatorio_Hidrico_Pl_7.png" /> Muriae_Reservatorio_Hidrico_Pl':
+         layer_Muriae_Reservatorio_Hidrico_Pl_7,'<img src="legend/Muriae_Ponto_Cotado_Altimetrico_P_6.png" /> Muriae_Ponto_Cotado_Altimetrico_P ':
+          cluster_Muriae_Ponto_Cotado_Altimetrico_P_6,'<img src="legend/Muriae_Massa_Dagua_Pl_5.png" /> Muriae_Massa_Dagua_Pl':
+         layer_Muriae_Massa_Dagua_Pl_5,'<img src="legend/Muriae_Reserva_Particular_Patrimonio_Natural_IEF_ICMBio_2020_dez_Pl_4.png" /> Muriae_Reserva_Particular_Patrimonio_Natural_IEF_ICMBio_2020_dez_Pl':
+          layer_Muriae_Reserva_Particular_Patrimonio_Natural_IEF_ICMBio_2020_dez_Pl_4,'Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl<br /><table><tr><td style="text-align: center;"><img src="legend/Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl_3_ÁreaArtificial0.png" /></td><td>Área Artificial</td></tr><tr><td style="text-align: center;"><img src="legend/Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl_3_MosaicodeOcupaçõesemÁreaFlorestal1.png" /></td><td>Mosaico de Ocupações em Área Florestal</td></tr><tr><td style="text-align: center;"><img src="legend/Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl_3_PastagemcomManejo2.png" /></td><td>Pastagem com Manejo</td></tr><tr><td style="text-align: center;"><img src="legend/Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl_3_VegetaçãoFlorestal3.png" /></td><td>Vegetação Florestal</td></tr></table>':
+           layer_Muriae_Uso_Cobertura_Terra_IBGE_2018_Pl_3,'Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl <br /><table><tr><td style="text-align: center;"><img src="legend/Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2_APAMunicipalÁguaLimpa0.png" /></td><td>APA Municipal Água Limpa</td></tr><tr><td style="text-align: center;"><img src="legend/Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2_APAMunicipalBabilônia1.png" /></td><td>APA Municipal Babilônia</td></tr><tr><td style="text-align: center;"><img src="legend/Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2_APAMunicipaldeErvália2.png" /></td><td>APA Municipal de Ervália</td></tr><tr><td style="text-align: center;"><img src="legend/Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2_APAMunicipalNinhodasGarças3.png" /></td><td>APA Municipal Ninho das Garças</td></tr><tr><td style="text-align: center;"><img src="legend/Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2_APAMunicipalPicodoItajuru4.png" /></td><td>APA Municipal Pico do Itajuru</td></tr><tr><td style="text-align: center;"><img src="legend/Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2_APAMunicipalPontão5.png" /></td><td>APA Municipal Pontão</td></tr><tr><td style="text-align: center;"><img src="legend/Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2_APAMunicipalSerradasAranhas6.png" /></td><td>APA Municipal Serra das Aranhas</td></tr></table>': layer_Muriae_Unidade_De_Conservacao_Municipal_IEF_ICMBio_2020_dez_Pl_2,'Muriae_Unidade_Conservacao_Estadual_IEF_ICMBio_2021_jan_Pl <br /><table><tr><td style="text-align: center;"><img src="legend/Muriae_Unidade_Conservacao_Estadual_IEF_ICMBio_2021_jan_Pl_1_ParqueEstadualdaSerradoBrigadeiro0.png" /></td><td>Parque Estadual da Serra do Brigadeiro</td></tr></table>': layer_Muriae_Unidade_Conservacao_Estadual_IEF_ICMBio_2021_jan_Pl_1,'Muriae_Floresta ao_IEF_2009_Pl <br /><table><tr><td style="text-align: center;"><img src="legend/Muriae_Florestaao_IEF_2009_Pl_0_Florestaestacionalsemidecidualmontana0.png" /></td><td>Floresta estacional semidecidual montana</td></tr><tr><td style="text-align: center;"><img src="legend/Muriae_Florestaao_IEF_2009_Pl_0_Florestaestacionalsemidecidualsubmontana1.png" /></td><td>Floresta estacional semidecidual sub montana</td></tr></table>':
+         layer_Muriae_Florestaao_IEF_2009_Pl_0,}).addTo(map);
+        setBounds();
+        var i = 0;
+        layer_Muriae_Ponto_Cotado_Altimetrico_P_6.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['COTA'] !== null?String('<div style="color: #000000; font-size: 7pt; font-family: \'MS Shell Dlg 2\', sans-serif;">' + layer.feature.properties['COTA']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Muriae_Ponto_Cotado_Altimetrico_P_6'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Muriae_Trecho_Rodoviario_DER_2019_L_11.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['SIGLA_RODO'] !== null?String('<div style="color: #000000; font-size: 6pt; font-family: \'MS Shell Dlg 2\', sans-serif;">' + layer.feature.properties['SIGLA_RODO']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Muriae_Trecho_Rodoviario_DER_2019_L_11'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Muriae_Vila_2021_jul_P_12.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['NOME'] !== null?String('<div style="color: #000000; font-size: 10pt; font-family: \'Arial Narrow\', sans-serif;">' + layer.feature.properties['NOME']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Muriae_Vila_2021_jul_P_12'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Muriae_Microregiao_IBGE_2015_jul_Pl_13.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['NOME'] !== null?String('<div style="color: #000000; font-size: 9pt; font-family: \'MS Shell Dlg 2\', sans-serif;">' + layer.feature.properties['NOME']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Muriae_Microregiao_IBGE_2015_jul_Pl_13'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Muriae_Limite_Distrital_2021_jul_L_14.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['NOME'] !== null?String('<div style="color: #000000; font-size: 10pt; font-family: \'MS Shell Dlg 2\', sans-serif;">' + layer.feature.properties['NOME']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Muriae_Limite_Distrital_2021_jul_L_14'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        resetLabels([layer_Muriae_Ponto_Cotado_Altimetrico_P_6,layer_Muriae_Pista_Ponto_Pouso_P_8,layer_Muriae_Trecho_Rodoviario_DER_2019_L_11,layer_Muriae_Vila_2021_jul_P_12,layer_Muriae_Microregiao_IBGE_2015_jul_Pl_13,layer_Muriae_Limite_Distrital_2021_jul_L_14,layer_Muriae_Limite_Municipal_2021_fev_Pl_15]);
+        map.on("zoomend", function(){
+            resetLabels([layer_Muriae_Ponto_Cotado_Altimetrico_P_6,layer_Muriae_Pista_Ponto_Pouso_P_8,layer_Muriae_Trecho_Rodoviario_DER_2019_L_11,layer_Muriae_Vila_2021_jul_P_12,layer_Muriae_Microregiao_IBGE_2015_jul_Pl_13,layer_Muriae_Limite_Distrital_2021_jul_L_14,layer_Muriae_Limite_Municipal_2021_fev_Pl_15]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_Muriae_Ponto_Cotado_Altimetrico_P_6,layer_Muriae_Pista_Ponto_Pouso_P_8,layer_Muriae_Trecho_Rodoviario_DER_2019_L_11,layer_Muriae_Vila_2021_jul_P_12,layer_Muriae_Microregiao_IBGE_2015_jul_Pl_13,layer_Muriae_Limite_Distrital_2021_jul_L_14,layer_Muriae_Limite_Municipal_2021_fev_Pl_15]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_Muriae_Ponto_Cotado_Altimetrico_P_6,layer_Muriae_Pista_Ponto_Pouso_P_8,layer_Muriae_Trecho_Rodoviario_DER_2019_L_11,layer_Muriae_Vila_2021_jul_P_12,layer_Muriae_Microregiao_IBGE_2015_jul_Pl_13,layer_Muriae_Limite_Distrital_2021_jul_L_14,layer_Muriae_Limite_Municipal_2021_fev_Pl_15]);
+        });
+        </script>
+    </body>
+</html>
